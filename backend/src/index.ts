@@ -1,6 +1,6 @@
 import app from "./app";
 import dotenv from "dotenv";
-import { logger } from "src/configs";
+import { logger, setupMongo } from "src/configs";
 
 dotenv.config();
 
@@ -16,6 +16,9 @@ logger.info(
     "\t"
   )
 );
+
+// setup MongoDB
+setupMongo();
 
 app.listen(PORT, () => {
   logger.info(`⚡️Server is running at http://localhost:${PORT}`);
