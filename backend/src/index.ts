@@ -20,3 +20,20 @@ logger.info(
 app.listen(PORT, () => {
   logger.info(`⚡️Server is running at http://localhost:${PORT}`);
 });
+
+const shutdown = () => {
+  logger.info("Received kill signal, shutting down gracefully.");
+  process.exit(1);
+};
+
+// Error Handler
+const uncaughtExceptionListener = (error: Error) => {
+  logger.error(error.message);
+  shutdown();
+};
+
+process.on("uncaughtException", uncaughtExceptionListener);
+process.on("unhandledRejection", uncaughtExceptionListener);
+
+// Signal Handler
+process.on("SIGTERM", shutdown);
