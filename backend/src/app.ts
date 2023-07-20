@@ -8,6 +8,7 @@ import fileUpload from "express-fileupload";
 import cors from "cors";
 import createHttpError from "http-errors";
 import { logger } from "./configs";
+import routes from "./routes";
 
 const app = express();
 
@@ -39,13 +40,7 @@ app.use(fileUpload({ useTempFiles: true }));
 app.use(cors({}));
 
 // ルーティング
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.get("/test", (req, res) => {
-  throw createHttpError[403]("Hello");
-});
+app.use("/api/v1", routes);
 
 // エラーハンドリング
 app.use(async (req, res, next) => {
