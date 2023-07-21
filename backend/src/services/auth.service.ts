@@ -29,7 +29,6 @@ const createUser = async (userData: UserModel) => {
     if (existsEmail) {
       throw createHttpError.Conflict(`Email ${userData.email} already exists.`);
     }
-    console.log({ userData });
     await collection.insertOne(userData);
   } catch (e) {
     if (e instanceof ZodError) {

@@ -1,2 +1,2 @@
-export * from "./logger";
-export * from "./mongo.configs";
+export * from "./logger.config";
+export * from "./mongo.config";

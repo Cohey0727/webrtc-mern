@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { logger } from "./logger";
+import { logger } from "./logger.config";
 
 const DATABASE_URL = process.env.DATABASE_URL!;
 const DATABASE_NAME = "WhatsApp";
