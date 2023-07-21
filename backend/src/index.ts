@@ -1,8 +1,8 @@
-import app from "./app";
 import dotenv from "dotenv";
-import { logger, setupMongo } from "src/configs";
-
 dotenv.config();
+
+import app from "./app";
+import { logger, setupMongo } from "src/configs";
 
 const PORT = process.env.PORT || 8000;
 

@@ -1,8 +1,22 @@
 import { RequestHandler } from "express";
+import { UserModel } from "src/models";
+import { createUser } from "src/services/auth.service";
 
-const register: RequestHandler = (req, res, next) => {
+type RegisterRequestBody = UserModel;
+
+type RegisterResponseBody = {
+  message: string;
+};
+
+const register: RequestHandler<
+  any,
+  RegisterResponseBody,
+  RegisterRequestBody
+> = async (req, res, next) => {
   try {
-    res.status(200).json("Hello register");
+    const { name, email, picture, status, password } = req.body;
+    await createUser({ name, email, picture, status, password });
+    res.status(200).json({ message: "success" });
   } catch (e) {
     next(e);
   }

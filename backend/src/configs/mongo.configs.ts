@@ -1,20 +1,38 @@
-import mongoose from "mongoose";
-import logger from "./logger";
+import { MongoClient } from "mongodb";
+import { logger } from "./logger";
 
-const setupMongo = () => {
-  return new Promise<void>((resolve, reject) => {
-    mongoose.connect(process.env.DATABASE_URL!, {}).then(() => {
-      logger.info("🟢 The MongoDB is connected.");
-      resolve();
-    });
-    mongoose.connection.on("error", (err) => {
-      logger.error(`🔴 The MongoDB is not connected. ${err}`);
-      reject();
-    });
-    if (process.env.NODE_ENV !== "production") {
-      mongoose.set("debug", true);
+const DATABASE_URL = process.env.DATABASE_URL!;
+const DATABASE_NAME = "WhatsApp";
+
+class MongoDB {
+  private static _connection: MongoClient | null = null;
+  private constructor() {}
+
+  public static async initialize(): Promise<void> {
+    try {
+      this._connection = new MongoClient(DATABASE_URL!);
+      await this._connection.connect();
+      logger.info("Connected to MongoDB.");
+    } catch (err) {
+      logger.error(`Error connecting to MongoDB: ${err}`);
+      throw err;
     }
-  });
+  }
+
+  public static get client(): MongoClient {
+    if (this._connection === null) {
+      throw new Error("MongoDB is not initialized.");
+    }
+    return this._connection;
+  }
+
+  public static get db() {
+    return this.client.db(DATABASE_NAME);
+  }
+}
+
+const setupMongo = async () => {
+  await MongoDB.initialize();
 };
 
-export { setupMongo };
+export { MongoDB, setupMongo };
