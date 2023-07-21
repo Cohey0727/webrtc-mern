@@ -16,4 +16,10 @@ function removeUndefined<T extends object>(obj: T) {
   return res;
 }
 
-export { objectEntries, objectKeys, objectValues, removeUndefined };
+function omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+  const res = { ...obj };
+  keys.forEach((key) => delete res[key]);
+  return res as Omit<T, K>;
+}
+
+export { objectEntries, objectKeys, objectValues, removeUndefined, omit };

@@ -1,38 +1,35 @@
+import mongoose from "mongoose";
 import createHttpError from "http-errors";
-import { getUserCollection, UserModel, UserSchema } from "src/models";
-import { ZodError } from "zod";
+import { IUser, UserModel } from "src/models";
 import bcrypt from "bcrypt";
 import { removeUndefined } from "src/utils";
+
+type UserData = Omit<IUser, "_id" | "createdAt" | "updatedAt">;
 
 const defaultUserData = {
   picture: "https://webrtc-mern.vercel.app/person.png",
 };
 
-const createUser = async (userData: UserModel) => {
+const createUser = async (userData: UserData) => {
   try {
-    // Merge default user data with user data from request body
+    // Merge default user data
     userData = { ...defaultUserData, ...removeUndefined(userData) };
 
-    // Validate user schema
-    UserSchema.parse(userData);
-
-    const collection = getUserCollection();
     // Check if user already exists
-    const existsEmail = await collection.findOne({
-      email: userData.email,
-    });
-
+    const existsEmail = await UserModel.findOne({ email: userData.email });
     // Hash password
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const hashedPassword = await bcrypt.hash(userData.password, 8);
     userData.password = hashedPassword;
 
     if (existsEmail) {
       throw createHttpError.Conflict(`Email ${userData.email} already exists.`);
     }
-    await collection.insertOne(userData);
+
+    const user = await new UserModel(userData).save();
+    return user;
   } catch (e) {
-    if (e instanceof ZodError) {
-      throw createHttpError.BadRequest(JSON.parse(e.message));
+    if (e instanceof mongoose.MongooseError) {
+      throw createHttpError.BadRequest(e.message);
     }
     throw e;
   }

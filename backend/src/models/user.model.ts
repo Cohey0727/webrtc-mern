@@ -1,16 +1,65 @@
-import { MongoDB } from "src/configs";
-import { z } from "zod";
+import mongoose, { Schema } from "mongoose";
+import validator from "validator";
+import bcrypt from "bcrypt";
 
-const UserSchema = z.object({
-  name: z.string().min(3).max(255),
-  email: z.string().email(),
-  picture: z.string().url().optional(),
-  status: z.string().min(3).max(255),
-  password: z.string().min(8).max(32),
+interface IUser {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  email: string;
+  picture: string;
+  status: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const userSchema = new Schema<IUser>(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Please provide tour email address"],
+      unique: true,
+      lowercase: true,
+      validate: validator.isEmail,
+    },
+    picture: {
+      type: String,
+      default: "https://webrtc-mern.vercel.app/person.png",
+      validate: validator.isURL,
+    },
+    status: {
+      type: String,
+      default: "Hey there ! I am using whatsapp",
+    },
+    password: {
+      type: String,
+      required: true,
+      minLength: 8,
+      maxLength: 64,
+    },
+  },
+  {
+    collection: "users",
+    timestamps: true,
+  },
+);
+
+userSchema.pre("save", async function (next) {
+  try {
+    if (this.isNew) {
+      const hashedPassword = await bcrypt.hash(this.password, 8);
+      this.password = hashedPassword;
+    }
+    next();
+  } catch (error) {
+    next(error as any);
+  }
 });
 
-type UserModel = z.infer<typeof UserSchema>;
+const UserModel = mongoose.model("UserModel", userSchema);
 
-const getUserCollection = () => MongoDB.db.collection<UserModel>("users");
-
-export { UserSchema, UserModel, getUserCollection };
+export { IUser, UserModel };
