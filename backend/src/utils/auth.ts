@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { logger } from "src/configs";
+import bcrypt from "bcrypt";
 
 const generateToken = async (
   payload: string | object | Buffer,
@@ -35,4 +36,8 @@ const verifyToken = async (
   });
 };
 
-export { generateToken, verifyToken };
+const hashPassword = async (password: string): Promise<string> => {
+  return await bcrypt.hash(password, 8);
+};
+
+export { generateToken, verifyToken, hashPassword };
