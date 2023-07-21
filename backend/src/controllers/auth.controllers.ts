@@ -103,15 +103,15 @@ const refreshToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, 
     if (!refreshToken) {
       throw createHttpError.Unauthorized("Please login first.");
     }
-    const check = await verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
-    if (!check || typeof check !== "object" || check.userId === undefined) {
+    const payload = await verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
+    if (!payload || typeof payload !== "object" || payload.userId === undefined) {
       throw createHttpError.Unauthorized("Please login first.");
     }
-    const userId = check.userId;
+    const userId = payload.userId;
     const accessToken = await generateToken({ userId }, "1d", process.env.ACCESS_TOKEN_SECRET!);
     res.json({ accessToken });
     // refreshトークンの有効期限が1週間未満の場合、新しいトークンを発行する
-    if (check.exp! - Date.now() / 1000 < 60 * 60 * 24 * 7) {
+    if (payload.exp! - Date.now() / 1000 < 60 * 60 * 24 * 7) {
       const refreshToken = await generateToken(
         { userId },
         "30d",
