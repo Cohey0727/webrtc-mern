@@ -1,12 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
-import styles from "./page.module.css";
+import { ArrowIcon } from "@/components";
 
 export default function Home() {
   return (
     <div>
       Hello
       <Link href="/">Hello</Link>
+      <ArrowIcon />
     </div>
   );
 }
