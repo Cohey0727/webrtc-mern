@@ -1,0 +1,10 @@
+export * from "./Page";
+export { default as Page } from "./Page";
+export * from "./PageActions";
+export { default as PageActions } from "./PageActions";
+export * from "./PageHeader";
+export { default as PageHeader } from "./PageHeader";
+export * from "./PageBody";
+export { default as PageBody } from "./PageBody";
+export * from "./PageTitle";
+export { default as PageTitle } from "./PageTitle";
