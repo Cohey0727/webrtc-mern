@@ -1,0 +1,40 @@
+import { useCallback, useState } from "react";
+import { Merge } from "@/utils";
+import { Column } from "@/components";
+import styles from "./styles";
+
+type BaseProps = {};
+type Value = never;
+type OwnProps = {
+  value?: Value;
+  defaultValue?: Value;
+  onChange?: (value: Value) => void;
+  disabled?: boolean;
+  error?: boolean;
+};
+
+type {{pascalCase name}}Props = Merge<BaseProps, OwnProps>;
+
+const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = (props) => {
+  const { value: propsValue, defaultValue, onChange, ...rest } = props;
+  const [innerValue, setInnerValue] = useState<Value | null>(defaultValue ?? null);
+  const value = propsValue !== undefined ? propsValue : innerValue;
+
+  const handleChange = useCallback(
+    (e: any) => {
+      const newValue = e.target.value as Value;
+      onChange?.(newValue);
+      setInnerValue(newValue);
+    },
+    [setInnerValue, onChange]
+  );
+
+  return (
+    <Column sx={styles.root} {...rest}>
+      {{pascalCase name}} Component
+    </Column>
+  );
+};
+
+export type { {{pascalCase name}}Props };
+export default {{pascalCase name}};

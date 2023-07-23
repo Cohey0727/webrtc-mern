@@ -71,6 +71,10 @@ const components = {
         borderRadius: "18px",
         fontWeight: "bold",
         whiteSpace: "nowrap",
+        border: `1px solid ${primary.main}`,
+      },
+      outlined: {
+        color: "#888",
       },
     },
   },

@@ -1,0 +1,20 @@
+import { Merge } from "@/utils";
+import { Column } from "@/components";
+import styles from "./styles";
+
+type BaseProps = {};
+type OwnProps = {};
+
+type {{pascalCase name}}Props = Merge<BaseProps, OwnProps>;
+
+const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = (props) => {
+  const { ...rest } = props;
+  return (
+    <Column sx={styles.root} {...rest}>
+      {{pascalCase name}} Component
+    </Column>
+  );
+};
+
+export type { {{pascalCase name}}Props };
+export default {{pascalCase name}};

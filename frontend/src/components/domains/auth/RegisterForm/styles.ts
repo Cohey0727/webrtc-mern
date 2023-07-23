@@ -6,6 +6,10 @@ const styles = {
     padding: "1rem",
     borderRadius: "0.5rem",
   },
+  title: {},
+  actions: {
+    marginTop: "2rem",
+  },
 } satisfies Styles;
 
 export default styles;

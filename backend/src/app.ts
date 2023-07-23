@@ -37,7 +37,7 @@ app.use(compression());
 app.use(fileUpload({ useTempFiles: true }));
 
 // CORS
-app.use(cors({}));
+app.use(cors({ origin: "*" }));
 
 // ルーティング
 app.use("/api/v1", routes);
@@ -48,7 +48,6 @@ app.use(async (req, res, next) => {
 });
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  logger.error("Hello");
   if (error instanceof createHttpError.HttpError) {
     res.status(error.statusCode).send({ message: error.message });
   } else {

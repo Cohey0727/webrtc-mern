@@ -4,7 +4,13 @@ import { IUser } from "src/models";
 import { createUser, signInUser } from "src/services/auth.service";
 import { generateToken, omit, verifyToken } from "src/utils";
 
-type RegisterRequestBody = Omit<IUser, "_id" | "createdAt" | "updatedAt">;
+type RegisterRequestBody = {
+  name: string;
+  email: string;
+  picture: string;
+  status: string;
+  password: string;
+};
 
 type RegisterResponseBody = {
   message: string;

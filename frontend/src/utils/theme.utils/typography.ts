@@ -1,33 +1,34 @@
 import { TypographyOptions } from "@mui/material/styles/createTypography";
+import palette from "./palette";
 
 const typography: TypographyOptions = {
   fontFamily:
     '"Helvetica Neue", Arial, "Noto sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif',
   fontSize: 14,
   h1: {
-    color: "#213547",
-    fontSize: "20px",
+    color: "#888",
+    fontSize: "32px",
     fontWeight: 700,
     lineHeight: "24px",
     letterSpacing: "0.05em",
   },
   h2: {
-    color: "#213547",
-    fontSize: "18px",
+    color: "#888",
+    fontSize: "24px",
     fontWeight: 700,
     lineHeight: "24px",
     letterSpacing: "0.05em",
   },
   h3: {
-    color: "#213547",
-    fontSize: "16px",
+    color: "#888",
+    fontSize: "20px",
     fontWeight: 700,
     lineHeight: "24px",
     letterSpacing: "0.05em",
   },
   h4: {
-    color: "#213547",
-    fontSize: "14px",
+    color: "#888",
+    fontSize: "18px",
     fontWeight: 700,
     lineHeight: "24px",
     letterSpacing: "0.05em",
@@ -40,11 +41,11 @@ const typography: TypographyOptions = {
     letterSpacing: "0.05em",
   },
   body1: {
-    color: "#213547",
+    color: "#888",
     fontSize: "14px",
   },
   button: {
-    color: "#213547",
+    color: "#888",
     textTransform: "none",
   },
   subtitle1: {

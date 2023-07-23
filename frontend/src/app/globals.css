@@ -1,7 +1,7 @@
 :root {
-  --color-primary-main: #2f2f6a;
-  --color-primary-dark: #131343;
-  --color-primary-light: #4f4faa;
+  --color-primary-main: #2f2f4a;
+  --color-primary-light: #3f3f55;
+  --color-primary-dark: #13132e;
 }
 
 * {
