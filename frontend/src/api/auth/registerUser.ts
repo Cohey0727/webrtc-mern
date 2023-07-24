@@ -1,7 +1,11 @@
+import { apiConfig } from "@/configs";
+
 type RegisterUserParams = {};
 
+const url = `${apiConfig.url}/api/v1/auth/register`;
+
 const registerUser = async (params: RegisterUserParams) => {
-  return await fetch("http://localhost:8000/api/v1/auth/register", {
+  return await fetch(url, {
     method: "POST",
     body: JSON.stringify(params),
     headers: {
