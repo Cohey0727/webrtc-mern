@@ -38,7 +38,7 @@ const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> =
     );
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      path: "/api/v1/auth/refreshToken",
+      path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
     });
 
@@ -78,7 +78,7 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
     );
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      path: "/api/v1/auth/refreshToken",
+      path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
     });
     res.json({
@@ -92,7 +92,7 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
 
 const logout: RequestHandler = (req, res, next) => {
   try {
-    res.clearCookie("refreshToken", { path: "/api/v1/auth/refreshToken" });
+    res.clearCookie("refreshToken", { path: "/api/v1/auth/token" });
     res.status(200).json("Logged out.");
   } catch (e) {
     next(e);
@@ -103,7 +103,7 @@ type RefreshTokenResponseBody = {
   accessToken: string;
 };
 
-const refreshToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res, next) => {
+const getToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -115,9 +115,8 @@ const refreshToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, 
     }
     const userId = payload.userId;
     const accessToken = await generateToken({ userId }, "1d", process.env.ACCESS_TOKEN_SECRET!);
-    res.json({ accessToken });
-    // refreshトークンの有効期限が1週間未満の場合、新しいトークンを発行する
-    if (payload.exp! - Date.now() / 1000 < 60 * 60 * 24 * 7) {
+    // refreshトークンの有効期限が2週間未満の場合、新しいトークンを発行する
+    if (payload.exp! - Date.now() / 1000 < 60 * 60 * 24 * 14) {
       const refreshToken = await generateToken(
         { userId },
         "30d",
@@ -125,7 +124,7 @@ const refreshToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, 
       );
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/api/v1/auth/refreshToken",
+        path: "/api/v1/auth/token",
         maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
       });
     }
@@ -135,4 +134,4 @@ const refreshToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, 
   }
 };
 
-export { register, login, logout, refreshToken };
+export { register, login, logout, getToken };

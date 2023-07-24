@@ -7,12 +7,10 @@ import styles from "./styles";
 type BaseProps = BoxProps;
 type RowProps = Omit<BaseProps, "ref">;
 
-const Row = forwardRef<HTMLDivElement, RowProps>((props, ref) => {
+const Row = forwardRef<HTMLDivElement, RowProps>(function Row(props, ref) {
   const { sx, ...rest } = props;
   return <Box sx={useSx(styles.root, sx)} {...rest} ref={ref} />;
 });
-
-Row.displayName = "Row";
 
 export type { RowProps };
 export default Row;

@@ -3,47 +3,57 @@ import { Column } from "@/components/containers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styles from "./styles";
 import { useForm } from "react-hook-form";
-import { FormProvider, TextInputField } from "@/components";
+import { FormProvider, TextInputField, useLoading } from "@/components";
 import { Button, Typography } from "@mui/material";
 import { RegisterFormSchema, RegisterFormValues } from "./schema";
 import { useCallback } from "react";
-import { registerUser } from "@/api";
+import { RegisterUserResponse, registerUser } from "@/api";
 
-type RegisterFormProps = {};
+type RegisterFormProps = {
+  onSubmitSuccess?: (response: RegisterUserResponse) => void;
+};
 
 const RegisterFormId = "register-form";
 
-const RegisterForm: React.FC<RegisterFormProps> = () => {
+const RegisterForm: React.FC<RegisterFormProps> = (props) => {
+  const { onSubmitSuccess } = props;
   const formContext = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
   });
   const { setError } = formContext;
+  const [loading, setLoading] = useLoading();
 
   const handleSubmit = useCallback(
     async (formValues: RegisterFormValues) => {
-      const { name, email, password, passwordConfirmation } = formValues;
-      if (password !== passwordConfirmation) {
-        setError("passwordConfirmation", {
-          type: "manual",
-          message: "passwords do not match",
-        });
+      try {
+        setLoading(true);
+        const { name, email, password, passwordConfirmation } = formValues;
+        if (password !== passwordConfirmation) {
+          setError("passwordConfirmation", {
+            type: "manual",
+            message: "passwords do not match",
+          });
+        }
+        const res = await registerUser({ name, email, password });
+        onSubmitSuccess?.(res);
+      } finally {
+        setLoading(false);
       }
-      await registerUser({ name, email, password });
     },
-    [setError],
+    [setError, setLoading, onSubmitSuccess],
   );
 
   return (
     <Column sx={styles.root}>
       <Typography variant="h2" sx={styles.title}>{`Welcome to What's App`}</Typography>
       <FormProvider formId={RegisterFormId} {...formContext} onSubmit={handleSubmit}>
-        <TextInputField name="name" label="name" />
-        <TextInputField name="email" label="email" />
-        <TextInputField name="password" label="password" type="password" />
-        <TextInputField name="passwordConfirmation" label="password confirmation" type="password" />
+        <TextInputField name="name" label="Name" />
+        <TextInputField name="email" label="Email" />
+        <TextInputField name="password" label="password" type="Password" />
+        <TextInputField name="passwordConfirmation" label="Password confirmation" type="password" />
       </FormProvider>
       <Column sx={styles.actions}>
-        <Button type="submit" variant="outlined" form={RegisterFormId}>
+        <Button type="submit" variant="outlined" form={RegisterFormId} disabled={loading}>
           Submit
         </Button>
       </Column>

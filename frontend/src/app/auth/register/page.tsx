@@ -1,11 +1,17 @@
-import Link from "next/link";
-import { Center, Column, Page, RegisterForm } from "@/components";
+"use client";
+import { Center, Page, RegisterForm } from "@/components";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 function Register() {
+  const router = useRouter();
+  const handleSubmitSuccess = useCallback(() => {
+    router.push("/");
+  }, [router]);
   return (
     <Page>
       <Center>
-        <RegisterForm />
+        <RegisterForm onSubmitSuccess={handleSubmitSuccess} />
       </Center>
     </Page>
   );

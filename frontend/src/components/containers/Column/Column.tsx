@@ -7,12 +7,10 @@ import styles from "./styles";
 type BaseProps = BoxProps;
 type ColumnProps = Omit<BaseProps, "ref">;
 
-const Column = forwardRef<HTMLDivElement, ColumnProps>((props, ref) => {
+const Column = forwardRef<HTMLDivElement, ColumnProps>(function Column(props, ref) {
   const { sx, ...rest } = props;
   return <Box sx={useSx(styles.root, sx)} {...rest} ref={ref} />;
 });
-
-Column.displayName = "Column";
 
 export type { ColumnProps };
 export default Column;

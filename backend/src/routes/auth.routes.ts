@@ -6,6 +6,6 @@ const route = express.Router();
 route.route("/register").post(authControllers.register);
 route.route("/login").post(authControllers.login);
 route.route("/logout").post(authControllers.logout);
-route.route("/refreshToken").post(authControllers.refreshToken);
+route.route("/token").post(authControllers.getToken);
 
 export default route;
