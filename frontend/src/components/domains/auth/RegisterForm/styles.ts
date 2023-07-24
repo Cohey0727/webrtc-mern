@@ -3,7 +3,7 @@ import { Styles, styleVars } from "@/utils";
 const styles = {
   root: {
     backgroundColor: styleVars.color.primary.light,
-    padding: "1rem",
+    padding: "2rem",
     borderRadius: "0.5rem",
   },
   title: {},
