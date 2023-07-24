@@ -4,7 +4,7 @@ type GetAccessTokenResponse = {
   accessToken: string;
 };
 
-const url = `${apiConfig.url}/api/v1/auth/register`;
+const url = `${apiConfig.url}/api/v1/auth/token`;
 
 const getAccessToken = async () => {
   const res = await fetch(url, {

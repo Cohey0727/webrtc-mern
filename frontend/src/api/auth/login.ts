@@ -26,6 +26,8 @@ const login = async (params: LoginParams) => {
     body: JSON.stringify(params),
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": "true",
     },
   });
   return (await res.json()) as LoginResponse;
