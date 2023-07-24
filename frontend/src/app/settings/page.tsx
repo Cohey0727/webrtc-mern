@@ -1,7 +1,8 @@
+"use client";
 import Link from "next/link";
-import { ArrowIcon } from "@/components";
+import { ArrowIcon, withAuthGuard } from "@/components";
 
-export default function Home() {
+function Home() {
   return (
     <div>
       Hello
@@ -10,3 +11,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuthGuard(Home);

@@ -1,3 +1,5 @@
+export * from "./AuthProvider";
+export { default as AuthProvider } from "./AuthProvider";
 export * from "./FormProvider";
 export { default as FormProvider } from "./FormProvider";
 export * from "./LoadingProvider";

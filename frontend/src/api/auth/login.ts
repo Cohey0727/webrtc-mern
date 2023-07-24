@@ -1,12 +1,11 @@
 import { apiConfig } from "@/configs";
 
-type RegisterUserParams = {
-  name: string;
+type LoginParams = {
   email: string;
   password: string;
 };
 
-type RegisterUserResponse = {
+type LoginResponse = {
   accessToken: string;
   user: {
     _id: string;
@@ -19,9 +18,9 @@ type RegisterUserResponse = {
   };
 };
 
-const url = `${apiConfig.url}/api/v1/auth/register`;
+const url = `${apiConfig.url}/api/v1/auth/login`;
 
-const registerUser = async (params: RegisterUserParams) => {
+const login = async (params: LoginParams) => {
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify(params),
@@ -29,8 +28,8 @@ const registerUser = async (params: RegisterUserParams) => {
       "Content-Type": "application/json",
     },
   });
-  return (await res.json()) as RegisterUserResponse;
+  return (await res.json()) as LoginResponse;
 };
 
-export type { RegisterUserParams, RegisterUserResponse };
-export default registerUser;
+export type { LoginParams, LoginResponse };
+export default login;
