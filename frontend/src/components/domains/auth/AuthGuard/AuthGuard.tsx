@@ -20,10 +20,13 @@ const AuthGuard: React.FC<AuthGuardProps> = (props) => {
   const { accessToken, setAccessToken } = useAuth();
   useEffect(() => {
     if (isInitial) {
-      getAccessToken().then(({ accessToken }) => {
-        setAccessToken(accessToken);
-        setInitial(false);
-      });
+      getAccessToken()
+        .then(({ accessToken }) => {
+          setAccessToken(accessToken);
+        })
+        .finally(() => {
+          setInitial(false);
+        });
     } else if (!accessToken) {
       const currentUrl = urlStringify({ pathname });
       router.push(
