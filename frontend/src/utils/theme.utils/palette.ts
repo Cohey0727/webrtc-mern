@@ -3,9 +3,9 @@ import { PaletteOptions } from "@mui/material/styles/createPalette";
 const palette = {
   mode: "light",
   primary: {
-    main: "#2f2f4a",
-    dark: "#13132e",
-    light: "#3f3f55",
+    main: "#101f29",
+    dark: "#203245",
+    light: "#06101e",
   },
   secondary: {
     main: "#333333",
