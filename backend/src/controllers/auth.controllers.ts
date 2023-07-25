@@ -40,6 +40,7 @@ const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> =
       httpOnly: true,
       path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+      sameSite: "none",
     });
 
     res.json({
@@ -80,6 +81,7 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
       httpOnly: true,
       path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+      sameSite: "none",
     });
     res.json({
       accessToken,
