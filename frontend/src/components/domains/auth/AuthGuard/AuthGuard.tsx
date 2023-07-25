@@ -24,8 +24,7 @@ const AuthGuard: React.FC<AuthGuardProps> = (props) => {
         setAccessToken(accessToken);
         setInitial(false);
       });
-    }
-    if (!accessToken) {
+    } else if (!accessToken) {
       const currentUrl = urlStringify({ pathname });
       router.push(
         urlStringify({

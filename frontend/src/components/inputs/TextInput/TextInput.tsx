@@ -11,14 +11,13 @@ type OwnProps = {
   endIcon?: React.ReactNode;
   InputProps?: Omit<MuiTextFieldProps["InputProps"], "startAdornment" | "endAdornment">;
 };
-type TextFieldProps = Merge<BaseProps, OwnProps>;
+type TextInputProps = Merge<BaseProps, OwnProps>;
 
-const TextField: React.FC<TextFieldProps> = (props) => {
-  const { startIcon, endIcon, InputProps, defaultValue = "", ...rest } = props;
+const TextInput: React.FC<TextInputProps> = (props) => {
+  const { startIcon, endIcon, InputProps, ...rest } = props;
   return (
     <MuiTextField
       {...rest}
-      defaultValue={defaultValue}
       InputProps={{
         startAdornment: <InputAdornment position="start">{startIcon}</InputAdornment>,
         endAdornment: <InputAdornment position="end">{endIcon}</InputAdornment>,
@@ -28,5 +27,5 @@ const TextField: React.FC<TextFieldProps> = (props) => {
   );
 };
 
-export type { TextFieldProps };
-export default TextField;
+export type { TextInputProps };
+export default TextInput;

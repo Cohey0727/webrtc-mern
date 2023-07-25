@@ -37,7 +37,12 @@ app.use(compression());
 app.use(fileUpload({ useTempFiles: true }));
 
 // CORS
-app.use(cors({ origin: process.env.FRONTEND_URL ?? "*" }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL ?? "*",
+    credentials: true,
+  }),
+);
 
 // ルーティング
 app.use("/api/v1", routes);

@@ -5,6 +5,7 @@ export default function Home() {
     <main>
       <Link href="/auth/register">Register</Link>
       <Link href="/auth/login">Login</Link>
+      <Link href="/settings">Settings</Link>
       <h1>{`What's App`}</h1>
     </main>
   );

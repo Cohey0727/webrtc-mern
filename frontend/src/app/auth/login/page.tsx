@@ -1,16 +1,21 @@
 "use client";
 import { LoginResponse } from "@/api";
-import { Center, LoginForm, Page } from "@/components";
-import { useRouter } from "next/navigation";
+import { Center, LoginForm, Page, useAuth } from "@/components";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { setAccessToken } = useAuth();
+
   const handleSubmitSuccess = useCallback(
     (res: LoginResponse) => {
-      router.push("/");
+      const callbackPath = searchParams.get("callback") ?? "/";
+      router.push(callbackPath);
+      setAccessToken(res.accessToken);
     },
-    [router],
+    [router, searchParams, setAccessToken],
   );
   return (
     <Page>

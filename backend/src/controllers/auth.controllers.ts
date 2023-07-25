@@ -36,11 +36,10 @@ const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> =
       "30d",
       process.env.REFRESH_TOKEN_SECRET!,
     );
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
-      sameSite: "none",
     });
 
     res.json({
@@ -77,11 +76,10 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
       "30d",
       process.env.REFRESH_TOKEN_SECRET!,
     );
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refresh_token", refreshToken, {
       httpOnly: true,
       path: "/api/v1/auth/token",
       maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
-      sameSite: "none",
     });
     res.json({
       accessToken,
@@ -94,7 +92,9 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
 
 const logout: RequestHandler = (req, res, next) => {
   try {
-    res.clearCookie("refreshToken", { path: "/api/v1/auth/token" });
+    res.clearCookie("refresh_token", {
+      path: "/api/v1/auth/token",
+    });
     res.status(200).json("Logged out.");
   } catch (e) {
     next(e);
@@ -124,7 +124,7 @@ const getToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res,
         "30d",
         process.env.REFRESH_TOKEN_SECRET!,
       );
-      res.cookie("refreshToken", refreshToken, {
+      res.cookie("refresh_token", refreshToken, {
         httpOnly: true,
         path: "/api/v1/auth/token",
         maxAge: 30 * 24 * 60 * 60 * 1000, //30 days

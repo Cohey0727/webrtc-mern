@@ -11,10 +11,11 @@ logger.info(
     {
       env: process.env.NODE_ENV,
       port: process.env.PORT,
+      frontend: process.env.FRONTEND_URL,
     },
     null,
-    "\t"
-  )
+    "\t",
+  ),
 );
 
 // setup MongoDB
