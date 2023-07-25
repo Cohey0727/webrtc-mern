@@ -37,35 +37,38 @@ module.exports = function (plop) {
       },
     ],
     actions: (data) => {
-      const actions = [
-        {
-          type: "add",
-          path: "{{folder}}/{{pascalCase name}}/{{pascalCase name}}.tsx",
-          templateFile: "templates/{{componentType}}/{{componentType}}.tsx.hbs",
-        },
-        {
-          type: "add",
-          path: "{{folder}}/{{pascalCase name}}/index.ts",
-          templateFile: "templates/{{componentType}}/index.ts.hbs",
-        },
-        {
-          type: "add",
-          path: "{{folder}}/{{pascalCase name}}/styles.ts",
-          templateFile: "templates/{{componentType}}/styles.ts.hbs",
-        },
-      ];
-
-      if (data.componentType === "TableComponent") {
-        actions.push({
-          type: "add",
-          path: "{{folder}}/{{pascalCase name}}/columns.tsx",
-          templateFile: "templates/TableComponent/columns.tsx.hbs",
-        });
-        actions.push({
-          type: "add",
-          path: "{{folder}}/{{pascalCase name}}/filters.tsx",
-          templateFile: "templates/TableComponent/filters.tsx.hbs",
-        });
+      let actions = [];
+      if (data.componentType === "PageComponent") {
+        actions = [
+          {
+            type: "add",
+            path: "src/app/{{kebabCase name}}/page.tsx",
+            templateFile: "templates/PageComponent/page.tsx.hbs",
+          },
+          {
+            type: "add",
+            path: "src/app/{{pascalCase name}}/styles.ts",
+            templateFile: "templates/{{componentType}}/styles.ts.hbs",
+          },
+        ];
+      } else {
+        actions = [
+          {
+            type: "add",
+            path: "{{folder}}/{{pascalCase name}}/{{pascalCase name}}.tsx",
+            templateFile: "templates/{{componentType}}/{{componentType}}.tsx.hbs",
+          },
+          {
+            type: "add",
+            path: "{{folder}}/{{pascalCase name}}/index.ts",
+            templateFile: "templates/{{componentType}}/index.ts.hbs",
+          },
+          {
+            type: "add",
+            path: "{{folder}}/{{pascalCase name}}/styles.ts",
+            templateFile: "templates/{{componentType}}/styles.ts.hbs",
+          },
+        ];
       }
 
       return actions;
