@@ -5,7 +5,7 @@ import { createUser, signInUser } from "src/services/auth.service";
 import { generateToken, omit, verifyToken } from "src/utils";
 import context from "src/context";
 
-type RegisterRequestBody = {
+type RegisterRequest = {
   name: string;
   email: string;
   picture: string;
@@ -13,7 +13,7 @@ type RegisterRequestBody = {
   password: string;
 };
 
-type RegisterResponseBody = {
+type RegisterResponse = {
   message: string;
   accessToken: string;
   user: Omit<IUser, "password">;
@@ -27,11 +27,7 @@ const refreshTokenCookieOptions: CookieOptions = {
   secure: !context.isLocal,
 };
 
-const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> = async (
-  req,
-  res,
-  next,
-) => {
+const register: RequestHandler<any, RegisterResponse, RegisterRequest> = async (req, res, next) => {
   try {
     const { name, email, picture, status, password } = req.body;
     const newUser = await createUser({ name, email, picture, status, password });
@@ -57,17 +53,17 @@ const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> =
   }
 };
 
-type LoginRequestBody = {
+type LoginRequest = {
   email: string;
   password: string;
 };
 
-type LoginResponseBody = {
+type LoginResponse = {
   accessToken: string;
   user: Omit<IUser, "password">;
 };
 
-const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (req, res, next) => {
+const login: RequestHandler<any, LoginResponse, LoginRequest> = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await signInUser({ email, password });
@@ -102,11 +98,11 @@ const logout: RequestHandler = (req, res, next) => {
   }
 };
 
-type RefreshTokenResponseBody = {
+type RefreshTokenResponse = {
   accessToken: string;
 };
 
-const getToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res, next) => {
+const getToken: RequestHandler<any, RefreshTokenResponse> = async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) {

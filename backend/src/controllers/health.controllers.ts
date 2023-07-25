@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
 import { objectEntries } from "src/utils";
 
-type SetCookieRequestBody = {};
+type SetCookieRequest = {};
 
-type SetCookieResponseBody = string;
+type SetCookieResponse = string;
 
-const setCookie: RequestHandler<any, SetCookieResponseBody, SetCookieRequestBody> = async (
+const setCookie: RequestHandler<any, SetCookieResponse, SetCookieRequest> = async (
   req,
   res,
   next,
@@ -32,7 +32,7 @@ const setCookie: RequestHandler<any, SetCookieResponseBody, SetCookieRequestBody
   }
 };
 
-const getCookie: RequestHandler<any, SetCookieResponseBody, SetCookieRequestBody> = async (
+const getCookie: RequestHandler<any, SetCookieResponse, SetCookieRequest> = async (
   req,
   res,
   next,

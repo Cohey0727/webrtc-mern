@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction, RequestHandler } from "express";
+import { RequestHandler } from "express";
 import createHttpError from "http-errors";
-import { UserModel } from "src/models";
+import { IUser, UserModel } from "src/models";
 import { verifyToken } from "src/utils";
 
-const authMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware: RequestHandler = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
     return next(createHttpError.Unauthorized("No token provided."));
@@ -18,7 +18,7 @@ const authMiddleware: RequestHandler = async (req: Request, res: Response, next:
     throw createHttpError.Unauthorized("Please login first.");
   }
   const userId = payload.userId;
-  const user = await UserModel.findOne({ userId }).lean();
+  const user = (await UserModel.findOne({ userId }).lean()) as IUser;
   if (!user) {
     throw createHttpError.Unauthorized("Please login first.");
   }
