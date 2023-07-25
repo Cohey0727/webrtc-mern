@@ -24,10 +24,9 @@ const login = async (params: LoginParams) => {
   const res = await fetch(url, {
     method: "POST",
     body: JSON.stringify(params),
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Credentials": "true",
     },
   });
   return (await res.json()) as LoginResponse;
