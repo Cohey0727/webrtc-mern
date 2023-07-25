@@ -108,7 +108,7 @@ type RefreshTokenResponseBody = {
 
 const getToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res, next) => {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.refresh_token;
     if (!refreshToken) {
       throw createHttpError.Unauthorized("Please login first.");
     }
