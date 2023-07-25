@@ -1,8 +1,9 @@
 import createHttpError from "http-errors";
-import { RequestHandler } from "express";
+import { CookieOptions, RequestHandler } from "express";
 import { IUser } from "src/models";
 import { createUser, signInUser } from "src/services/auth.service";
 import { generateToken, omit, verifyToken } from "src/utils";
+import context from "src/context";
 
 type RegisterRequestBody = {
   name: string;
@@ -16,6 +17,14 @@ type RegisterResponseBody = {
   message: string;
   accessToken: string;
   user: Omit<IUser, "password">;
+};
+
+const refreshTokenCookieOptions: CookieOptions = {
+  httpOnly: true,
+  path: "/api/v1/auth/token",
+  maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
+  sameSite: context.isLocal ? "lax" : "none",
+  secure: !context.isLocal,
 };
 
 const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> = async (
@@ -36,11 +45,7 @@ const register: RequestHandler<any, RegisterResponseBody, RegisterRequestBody> =
       "30d",
       process.env.REFRESH_TOKEN_SECRET!,
     );
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      path: "/api/v1/auth/token",
-      maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
-    });
+    res.cookie("refresh_token", refreshToken, refreshTokenCookieOptions);
 
     res.json({
       message: "register success.",
@@ -76,11 +81,7 @@ const login: RequestHandler<any, LoginResponseBody, LoginRequestBody> = async (r
       "30d",
       process.env.REFRESH_TOKEN_SECRET!,
     );
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      path: "/api/v1/auth/token",
-      maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
-    });
+    res.cookie("refresh_token", refreshToken, refreshTokenCookieOptions);
     res.json({
       accessToken,
       user: omit(user.toJSON(), ["password"]),
@@ -124,11 +125,7 @@ const getToken: RequestHandler<any, RefreshTokenResponseBody> = async (req, res,
         "30d",
         process.env.REFRESH_TOKEN_SECRET!,
       );
-      res.cookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        path: "/api/v1/auth/token",
-        maxAge: 30 * 24 * 60 * 60 * 1000, //30 days
-      });
+      res.cookie("refresh_token", refreshToken, refreshTokenCookieOptions);
     }
     res.status(200).json({ accessToken });
   } catch (e) {
