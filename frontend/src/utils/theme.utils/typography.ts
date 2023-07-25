@@ -1,5 +1,4 @@
 import { TypographyOptions } from "@mui/material/styles/createTypography";
-import palette from "./palette";
 
 const typography: TypographyOptions = {
   fontFamily:

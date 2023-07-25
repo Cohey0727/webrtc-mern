@@ -4,6 +4,13 @@ import palette from "./palette";
 const { primary, success, error } = palette;
 
 const components = {
+  MuiCssBaseline: {
+    styleOverrides: {
+      body: {
+        backgroundColor: palette.primary.main,
+      },
+    },
+  },
   MuiInputLabel: {
     styleOverrides: {
       formControl: {
