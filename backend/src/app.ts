@@ -39,7 +39,7 @@ app.use(fileUpload({ useTempFiles: true }));
 // CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? "*",
+    origin: process.env.CLIENT_ENDPOINT ?? "*",
     credentials: true,
   }),
 );

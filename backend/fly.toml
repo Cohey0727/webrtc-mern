@@ -15,4 +15,4 @@ primary_region = "nrt"
   processes = ["app"]
 [env]
   PORT = 8000
-  FRONTEND_URL = "https://webrtc-mern.vercel.app"
+  CLIENT_ENDPOINT = "https://webrtc-mern.vercel.app"

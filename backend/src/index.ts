@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import { Server } from "socket.io";
 import app from "./app";
 import { logger, setupMongo } from "src/configs";
+import { handleSocketIO } from "./services";
 
 const PORT = process.env.PORT || 8000;
 
@@ -11,7 +12,7 @@ logger.info(
     {
       env: process.env.NODE_ENV,
       port: process.env.PORT,
-      frontend: process.env.FRONTEND_URL,
+      frontend: process.env.CLIENT_ENDPOINT,
     },
     null,
     "\t",
@@ -21,8 +22,21 @@ logger.info(
 // setup MongoDB
 setupMongo();
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`⚡️Server is running at http://localhost:${PORT}`);
+});
+
+// setup WebSocket
+const wsServer = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.CLIENT_ENDPOINT,
+  },
+});
+
+wsServer.on("connection", (socket) => {
+  logger.info("socket io connected successfully.");
+  handleSocketIO(socket, wsServer);
 });
 
 const shutdown = () => {
