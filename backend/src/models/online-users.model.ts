@@ -5,7 +5,7 @@ const { ObjectId } = Schema.Types;
 interface IOnlineUser {
   _id: mongoose.Types.ObjectId;
   user: mongoose.Types.ObjectId;
-  socketId: string;
+  socketIds: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,13 +16,15 @@ const onlineUserSchema = new Schema<IOnlineUser>(
       type: ObjectId,
       ref: "ConversationModel",
     },
-    socketId: {
-      type: String,
-      trim: true,
-    },
+    socketIds: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
   },
   {
-    collection: "users",
+    collection: "online_users",
     timestamps: true,
   },
 );

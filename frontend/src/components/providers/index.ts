@@ -4,5 +4,7 @@ export * from "./FormProvider";
 export { default as FormProvider } from "./FormProvider";
 export * from "./LoadingProvider";
 export { default as LoadingProvider } from "./LoadingProvider";
+export * from "./SocketProvider";
+export { default as SocketProvider } from "./SocketProvider";
 export * from "./ThemeProvider";
 export { default as ThemeProvider } from "./ThemeProvider";

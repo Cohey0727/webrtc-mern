@@ -5,6 +5,7 @@ import {
   LoadingContainer,
   LoadingProvider,
   ThemeProvider,
+  SocketProvider,
 } from "@/components";
 import "./globals.css";
 
@@ -18,11 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <body>
         <AuthProvider>
-          <ThemeProvider>
-            <LoadingProvider loadingElement={<Loading id="root-loading" />}>
-              <LoadingContainer>{children}</LoadingContainer>
-            </LoadingProvider>
-          </ThemeProvider>
+          <SocketProvider>
+            <ThemeProvider>
+              <LoadingProvider loadingElement={<Loading id="root-loading" />}>
+                <LoadingContainer>{children}</LoadingContainer>
+              </LoadingProvider>
+            </ThemeProvider>
+          </SocketProvider>
         </AuthProvider>
       </body>
     </html>
