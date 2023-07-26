@@ -1,10 +1,11 @@
 "use client";
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { getSocket } from "@/utils";
 import { Socket } from "socket.io-client";
+import { useAuth } from "../AuthProvider";
 
 type SocketContextType = {
-  socket: Socket;
+  socket: Socket | null;
   refresh: () => void;
 };
 
@@ -14,12 +15,22 @@ type SocketProviderProps = {
   children: React.ReactNode;
 };
 
+// AuthProviderに依存しているので、AuthProviderの後にSocketProviderを配置する必要がある
 const SocketProvider: React.FC<SocketProviderProps> = (props) => {
+  const { accessToken } = useAuth();
   const { children } = props;
-  const [socket, setSocket] = useState<Socket>(() => getSocket());
+  const [socket, setSocket] = useState<Socket | null>(() =>
+    accessToken ? getSocket(accessToken) : null,
+  );
   const refresh = useCallback(() => {
-    setSocket(getSocket());
-  }, []);
+    if (!accessToken) return;
+    setSocket(getSocket(accessToken));
+  }, [accessToken]);
+  useEffect(() => {
+    if (!accessToken) return;
+    setSocket(getSocket(accessToken));
+  }, [accessToken]);
+
   return <SocketContext.Provider value={{ socket, refresh }}>{children}</SocketContext.Provider>;
 };
 

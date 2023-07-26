@@ -9,6 +9,7 @@ const SocketEvent = {
   Disconnect: "Disconnect",
   SetupSocket: "SetupSocket",
   Join: "Join",
+  Leave: "Leave",
   JoinConversation: "JoinConversation",
   SendMessage: "SendMessage",
   ReceiveMessage: "ReceiveMessage",
@@ -24,14 +25,15 @@ const SocketEvent = {
 const handleSocketIO = (
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
   io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
+  userId: string,
 ) => {
   // ユーザーがアプリに参加もしくはアプリを開く
-  socket.on(SocketEvent.Join, async (userId: mongoose.Types.ObjectId) => {
-    socket.join(objectIdToString(userId));
+  socket.on(SocketEvent.Join, async () => {
+    socket.join(userId);
     // 参加したユーザーをオンラインユーザーに追加
     const onlineUser = await OnlineUserModel.findOne({ userId });
     if (!onlineUser) {
-      const newOnlineUser = new OnlineUserModel({ userId, socketId: socket.id });
+      const newOnlineUser = new OnlineUserModel({ user: userId, socketIds: [socket.id] });
       await newOnlineUser.save();
     } else {
       // すでにオンラインユーザーに存在する場合はsocket idを追加
@@ -45,6 +47,10 @@ const handleSocketIO = (
     io.emit(SocketEvent.GetOnlineUsers, onlineUsers);
     // socket idを送信
     io.emit(SocketEvent.SetupSocket, socket.id);
+  });
+
+  socket.on(SocketEvent.Leave, async (userId: string) => {
+    socket.leave(userId);
   });
 
   // socketの切断

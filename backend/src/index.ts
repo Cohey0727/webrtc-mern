@@ -1,9 +1,11 @@
+import { verifyToken } from "src/utils";
 import dotenv from "dotenv";
 dotenv.config();
 import { Server } from "socket.io";
 import app from "./app";
 import { logger, setupMongo } from "src/configs";
 import { handleSocketIO } from "./services";
+import createHttpError from "http-errors";
 
 const PORT = process.env.PORT || 8000;
 
@@ -34,9 +36,24 @@ const wsServer = new Server(server, {
   },
 });
 
-wsServer.on("connection", (socket) => {
-  logger.info("socket io connected successfully.");
-  handleSocketIO(socket, wsServer);
+wsServer.on("connection", async (socket) => {
+  const accessToken = socket.handshake.auth.token as any;
+  if (!accessToken) {
+    socket.disconnect();
+    return;
+  }
+  try {
+    const payload = await verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET!);
+    if (!payload || typeof payload !== "object" || payload.userId === undefined) {
+      throw createHttpError.Unauthorized("Please login first.");
+    }
+    const userId = payload.userId as string;
+    logger.info(`User ${userId} socket connected.`);
+    handleSocketIO(socket, wsServer, userId);
+  } catch (error) {
+    logger.error(error);
+    socket.disconnect();
+  }
 });
 
 const shutdown = () => {

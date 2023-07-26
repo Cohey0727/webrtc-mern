@@ -1,9 +1,11 @@
 import { apiConfig } from "@/configs";
 import { io } from "socket.io-client";
 
-const getSocket = () => {
+const getSocket = (token: string) => {
   const domain = apiConfig.domain;
-  return io(domain);
+  return io(domain, {
+    auth: { token },
+  });
 };
 
 export { getSocket };

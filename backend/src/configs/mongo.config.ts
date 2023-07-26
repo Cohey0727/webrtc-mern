@@ -1,9 +1,9 @@
 import { logger } from "./logger.config";
 import mongoose from "mongoose";
 
-const DATABASE_URL = process.env.DATABASE_URL!;
-
 const setupMongo = async () => {
+  const databaseUrl = process.env.DATABASE_URL!;
+  console.log({ databaseUrl });
   mongoose.connection.on("error", (err) => {
     logger.error(`Mongodb connection error : ${err}`);
     process.exit(1);
@@ -15,7 +15,7 @@ const setupMongo = async () => {
   }
 
   //mongodb connection
-  mongoose.connect(DATABASE_URL).then(() => {
+  mongoose.connect(databaseUrl).then(() => {
     logger.info("Connected to Mongodb.");
   });
 };

@@ -1,8 +1,19 @@
 "use client";
-import { Row, withAuthGuard } from "@/components";
+import { SocketEvent } from "@/api/socket/constants";
+import { Row, useSocket, withAuthGuard } from "@/components";
 import { Avatar, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
+import { useEffect } from "react";
 
-const Conversations = () => {
+const Home = () => {
+  const { socket } = useSocket();
+  useEffect(() => {
+    if (!socket) return;
+    socket.emit(SocketEvent.Join);
+    return () => {
+      socket.emit(SocketEvent.Leave);
+    };
+  }, [socket]);
+
   return (
     <Row>
       <List>
@@ -17,4 +28,4 @@ const Conversations = () => {
   );
 };
 
-export default withAuthGuard(Conversations);
+export default withAuthGuard(Home);

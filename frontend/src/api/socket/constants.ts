@@ -3,6 +3,7 @@ const SocketEvent = {
   Disconnect: "Disconnect",
   SetupSocket: "SetupSocket",
   Join: "Join",
+  Leave: "Leave",
   JoinConversation: "JoinConversation",
   SendMessage: "SendMessage",
   ReceiveMessage: "ReceiveMessage",

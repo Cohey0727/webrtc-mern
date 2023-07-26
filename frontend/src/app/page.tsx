@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Home() {
+export default function Root() {
   return (
     <main>
       <Link href="/auth/register">Register</Link>

@@ -4,8 +4,8 @@ const palette = {
   mode: "light",
   primary: {
     main: "#101f29",
-    dark: "#203245",
-    light: "#06101e",
+    dark: "#06101e",
+    light: "#203245",
   },
   secondary: {
     main: "#333333",
@@ -34,7 +34,7 @@ const palette = {
     secondary: "#333333",
   },
   background: {
-    default: "#f5f5f5",
+    default: "#203245",
     paper: "#ffffff",
   },
 } satisfies PaletteOptions;

@@ -98,7 +98,7 @@ const components = {
     },
     styleOverrides: {
       root: {
-        backgroundColor: "#fff",
+        backgroundColor: palette.primary.main,
         boxSizing: "border-box",
       },
     },
@@ -122,6 +122,13 @@ const components = {
           backgroundColor: "#eee",
           color: primary.main,
         },
+      },
+    },
+  },
+  MuiListItemIcon: {
+    styleOverrides: {
+      root: {
+        color: "#888",
       },
     },
   },
@@ -169,6 +176,13 @@ const components = {
           borderColor: "#4173C5",
           backgroundColor: `#4173C522`,
         },
+      },
+    },
+  },
+  MuiDrawer: {
+    styleOverrides: {
+      paper: {
+        backgroundColor: palette.primary.main,
       },
     },
   },
