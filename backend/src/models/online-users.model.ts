@@ -14,6 +14,7 @@ const onlineUserSchema = new Schema<IOnlineUser>(
   {
     user: {
       type: ObjectId,
+      unique: true,
       ref: "ConversationModel",
     },
     socketIds: [

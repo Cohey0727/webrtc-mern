@@ -31,7 +31,7 @@ const handleSocketIO = (
   socket.on(SocketEvent.Join, async () => {
     socket.join(userId);
     // 参加したユーザーをオンラインユーザーに追加
-    const onlineUser = await OnlineUserModel.findOne({ userId });
+    const onlineUser = await OnlineUserModel.findOne({ user: userId });
     if (!onlineUser) {
       const newOnlineUser = new OnlineUserModel({ user: userId, socketIds: [socket.id] });
       await newOnlineUser.save();

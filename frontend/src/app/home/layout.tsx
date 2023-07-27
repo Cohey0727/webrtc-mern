@@ -2,16 +2,13 @@
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
-import React, { Suspense, useMemo, useState } from "react";
-import { Column, ErrorBoundary, Loading, Row, SideNavigation, useAuth } from "@/components";
+import React, { Suspense, useMemo } from "react";
+import { Column, Loading, Row, useAuth } from "@/components";
 import styles from "./styles";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import { Avatar, Tooltip } from "@mui/material";
