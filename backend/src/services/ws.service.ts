@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
 import { Server, Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { OnlineUserModel } from "src/models";
-import { objectIdToString } from "src/utils";
 
 const SocketEvent = {
   Connect: "connect",
@@ -15,9 +13,19 @@ const SocketEvent = {
   ReceiveMessage: "ReceiveMessage",
   Typing: "Typing",
   StopTyping: "StopTyping",
-  CallUser: "CallUser",
-  AnswerCall: "AnswerCall",
+  // 通話をかける
+  DoCall: "DoCall",
+  // 通話がかかってくる
+  ReceiveCall: "ReceiveCall",
+  // かかってきた通話を拒否
+  RejectCall: "RejectCall",
+  // かけている通話をキャンセル
+  CancelCall: "CancelCall",
+  // 通話にでる
   AcceptCall: "AcceptCall",
+  // 通話にでてもられた
+  AcceptedCall: "AcceptedCall",
+  // 通話を終了
   EndCall: "EndCall",
   GetOnlineUsers: "GetOnlineUsers",
 } as const;
@@ -29,7 +37,6 @@ const handleSocketIO = (
 ) => {
   // ユーザーがアプリに参加もしくはアプリを開く
   socket.on(SocketEvent.Join, async () => {
-    socket.join(userId);
     // 参加したユーザーをオンラインユーザーに追加
     const onlineUser = await OnlineUserModel.findOne({ user: userId });
     if (!onlineUser) {
@@ -43,14 +50,17 @@ const handleSocketIO = (
       }
     }
     // フロントエンドにオンラインユーザーを送信
-    const onlineUsers = await OnlineUserModel.find().lean();
+    const onlineUsers = await OnlineUserModel.find().populate("user", "-password").lean();
     io.emit(SocketEvent.GetOnlineUsers, onlineUsers);
     // socket idを送信
     io.emit(SocketEvent.SetupSocket, socket.id);
   });
 
-  socket.on(SocketEvent.Leave, async (userId: string) => {
-    socket.leave(userId);
+  socket.on(SocketEvent.Leave, async () => {
+    await OnlineUserModel.updateMany({}, { $pull: { socketIds: socket.id } });
+    await OnlineUserModel.deleteMany({ socketIds: { $size: 0 } });
+    const onlineUsers = await OnlineUserModel.find().lean();
+    io.emit(SocketEvent.GetOnlineUsers, onlineUsers);
   });
 
   // socketの切断
@@ -87,24 +97,25 @@ const handleSocketIO = (
 
   // 通話
   // ---ユーザーへの通話
-  socket.on(SocketEvent.CallUser, async (data: any) => {
-    const userId = data.userToCall;
-    const onlineUser = await OnlineUserModel.findOne({ userId });
+  socket.on(SocketEvent.DoCall, async (data: any) => {
+    const { userId } = data;
+    const onlineUser = await OnlineUserModel.findOne({ user: userId });
     if (!onlineUser) {
       return;
     }
     onlineUser.socketIds.forEach((socketId) => {
-      io.to(socketId).emit(SocketEvent.CallUser, {
+      io.to(socketId).emit(SocketEvent.ReceiveCall, {
         signal: data.signal,
         from: data.from,
-        name: data.name,
-        picture: data.picture,
+        // name: data.name,
+        // picture: data.picture,
       });
     });
   });
   // ---通話の応答
-  socket.on(SocketEvent.AnswerCall, (data: any) => {
-    io.to(data.to).emit(SocketEvent.AcceptCall, data.signal);
+  socket.on(SocketEvent.AcceptCall, (data: any) => {
+    console.log({ data });
+    io.to(data.to).emit(SocketEvent.AcceptedCall, data.signal);
   });
 
   // ---通話の終了

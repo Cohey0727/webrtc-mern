@@ -6,7 +6,6 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 type AuthContextType = {
   accessToken: string | null;
   userId: string | null;
-
   logout: () => Promise<void>;
   login: (params: LoginParams) => Promise<void>;
   refreshToken: () => Promise<void>;
@@ -21,7 +20,6 @@ type TokenPayload = {
 const AuthContext = createContext<AuthContextType>({
   accessToken: null,
   userId: null,
-
   logout: () => Promise.resolve(),
   login: () => Promise.resolve(),
   refreshToken: () => Promise.resolve(),
@@ -70,8 +68,13 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   );
 };
 
-function useAuth() {
-  return useContext(AuthContext);
+type UseAuthOptions = {
+  suspense?: boolean;
+};
+
+function useAuth(options: UseAuthOptions = {}) {
+  const context = useContext(AuthContext);
+  return context;
 }
 
 export { useAuth };

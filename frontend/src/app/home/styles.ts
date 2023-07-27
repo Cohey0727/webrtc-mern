@@ -1,6 +1,6 @@
-import { Styles } from "@/utils";
+import { Styles, palette } from "@/utils";
 
-const styles = {
+const layoutStyles = {
   root: {
     height: "100%",
     width: "100%",
@@ -15,6 +15,9 @@ const styles = {
     overflow: "hidden",
     ...theme.mixins.toolbar,
   }),
+  navigation: {
+    borderRight: `2px solid ${palette.primary.light}`,
+  },
   navigationTop: {
     flex: "1 1 auto",
   },
@@ -62,4 +65,21 @@ const styles = {
   },
 } satisfies Styles;
 
+const styles = {
+  root: {
+    height: "100%",
+    width: "100%",
+  },
+  userListContainer: {
+    height: "100%",
+  },
+  useList: {
+    width: "324px",
+  },
+  useListItem: {
+    borderBottom: `2px solid ${palette.primary.light}`,
+  },
+} satisfies Styles;
+
 export default styles;
+export { layoutStyles };

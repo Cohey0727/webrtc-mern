@@ -9,13 +9,13 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 
 import React, { Suspense, useMemo } from "react";
 import { Column, Loading, Row, useAuth } from "@/components";
-import styles from "./styles";
+import { layoutStyles } from "./styles";
 import MessageOutlinedIcon from "@mui/icons-material/MessageOutlined";
 import { Avatar, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type HomeTemplateProps = {
+type HomeLayoutProps = {
   children: React.ReactNode;
 };
 
@@ -33,7 +33,7 @@ const menus: (MenuItem | typeof Divider)[] = [
   },
 ];
 
-const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
+const HomeLayout: React.FC<HomeLayoutProps> = (props) => {
   const { children } = props;
   const pathname = usePathname();
   const { logout, userId } = useAuth();
@@ -49,7 +49,7 @@ const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
     return [
       {
         title: userId,
-        icon: <Avatar src={""} sx={styles.avatarImage} />,
+        icon: <Avatar src={""} sx={layoutStyles.avatarImage} />,
       },
       {
         title: "ログアウト",
@@ -60,9 +60,9 @@ const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
   }, [logout, userId]);
 
   return (
-    <Row sx={styles.root}>
-      <Column>
-        <Column sx={styles.navigationTop}>
+    <Row sx={layoutStyles.root}>
+      <Column sx={layoutStyles.navigation}>
+        <Column sx={layoutStyles.navigationTop}>
           <List>
             {menus.map((menu, index) => {
               if (!isMenuItem(menu)) {
@@ -75,8 +75,8 @@ const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
                 <Link key={path} href={`${path}/`}>
                   <Tooltip title={title} arrow placement="right">
                     <ListItem disablePadding>
-                      <ListItemButton sx={styles.menuItemButton} selected={isSelected}>
-                        <ListItemIcon sx={styles.menuItemIcon}>
+                      <ListItemButton sx={layoutStyles.menuItemButton} selected={isSelected}>
+                        <ListItemIcon sx={layoutStyles.menuItemIcon}>
                           <Icon />
                         </ListItemIcon>
                       </ListItemButton>
@@ -87,14 +87,14 @@ const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
             })}
           </List>
         </Column>
-        <Column sx={styles.navigationBottom}>
+        <Column sx={layoutStyles.navigationBottom}>
           {footerMenus.map(({ title, icon, onClick }, index) => {
             return (
               <React.Fragment key={`${title}-${index}`}>
                 <Tooltip title={title} arrow placement="right">
                   <ListItem disablePadding>
-                    <ListItemButton sx={styles.menuItemButton} onClick={onClick}>
-                      <ListItemIcon sx={styles.menuItemIcon}>{icon}</ListItemIcon>
+                    <ListItemButton sx={layoutStyles.menuItemButton} onClick={onClick}>
+                      <ListItemIcon sx={layoutStyles.menuItemIcon}>{icon}</ListItemIcon>
                     </ListItemButton>
                   </ListItem>
                 </Tooltip>
@@ -103,7 +103,7 @@ const HomeTemplate: React.FC<HomeTemplateProps> = (props) => {
           })}
         </Column>
       </Column>
-      <Box component="main" sx={styles.main}>
+      <Box component="main" sx={layoutStyles.main}>
         <Suspense fallback={<Loading />}>{children}</Suspense>
         {/* <ErrorBoundary
           refreshDependency={pathname}
@@ -133,4 +133,4 @@ const isMenuItem = (item: any): item is MenuItem => {
   return item.title && item.icon && item.path;
 };
 
-export default HomeTemplate;
+export default HomeLayout;

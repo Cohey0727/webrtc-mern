@@ -1,12 +1,11 @@
 "use client";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getSocket } from "@/utils";
 import { Socket } from "socket.io-client";
 import { useAuth } from "../AuthProvider";
 
 type SocketContextType = {
   socket: Socket | null;
-  refresh: () => void;
 };
 
 const SocketContext = createContext<SocketContextType>({} as SocketContextType);
@@ -19,19 +18,11 @@ type SocketProviderProps = {
 const SocketProvider: React.FC<SocketProviderProps> = (props) => {
   const { accessToken } = useAuth();
   const { children } = props;
-  const [socket, setSocket] = useState<Socket | null>(() =>
-    accessToken ? getSocket(accessToken) : null,
-  );
-  const refresh = useCallback(() => {
-    if (!accessToken) return;
-    setSocket(getSocket(accessToken));
-  }, [accessToken]);
-  useEffect(() => {
-    if (!accessToken) return;
-    setSocket(getSocket(accessToken));
+  const socket = useMemo(() => {
+    return accessToken ? getSocket(accessToken) : null;
   }, [accessToken]);
 
-  return <SocketContext.Provider value={{ socket, refresh }}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>;
 };
 
 const useSocket = () => {
