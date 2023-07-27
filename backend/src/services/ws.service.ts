@@ -114,7 +114,6 @@ const handleSocketIO = (
   });
   // ---通話の応答
   socket.on(SocketEvent.AcceptCall, (data: any) => {
-    console.log({ data });
     io.to(data.to).emit(SocketEvent.AcceptedCall, data.signal);
   });
 

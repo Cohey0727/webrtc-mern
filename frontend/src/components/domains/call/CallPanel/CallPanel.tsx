@@ -1,11 +1,12 @@
+import { MutableRefObject } from "react";
 import { Merge } from "@/utils";
 import { Column } from "@/components";
 import styles from "./styles";
 
 type BaseProps = {};
 type OwnProps = {
-  ownVideoRef: React.LegacyRef<HTMLVideoElement>;
-  partnerVideoRef: React.LegacyRef<HTMLVideoElement>;
+  ownVideoRef: MutableRefObject<HTMLVideoElement>;
+  partnerVideoRef: MutableRefObject<HTMLVideoElement>;
 };
 
 type CallPanelProps = Merge<BaseProps, OwnProps>;
@@ -25,7 +26,6 @@ const CallPanel: React.FC<CallPanelProps> = (props) => {
       <video
         ref={partnerVideoRef}
         playsInline
-        muted
         autoPlay
         // className={toggle ? "SmallVideoCall" : "largeVideoCall"}
         // onClick={() => setToggle((prev) => !prev)}

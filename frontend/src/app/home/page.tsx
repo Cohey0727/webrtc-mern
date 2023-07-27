@@ -29,6 +29,8 @@ const Home = () => {
   const [myMediaStream, setMyMediaStream] = useState<MediaStream | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [ringing, setRinging] = useState(false);
+  const [paterSocketId, setPartnerSocketId] = useState<string | null>(null);
+  const [receivedSignal, setReceivedSignal] = useState<Peer.SignalData | null>(null);
 
   const peerRef = useRef<Peer.Instance | null>(null);
   const ownVideoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
@@ -50,7 +52,10 @@ const Home = () => {
     });
     socket.on(SocketEvent.ReceiveCall, (data) => {
       // 受信
+      console.log({ data });
       setRinging(true);
+      setReceivedSignal(data.signal);
+      setPartnerSocketId(data.from);
     });
     socket.on(SocketEvent.CancelCall, (data) => {
       // 着信中にキャンセル
@@ -78,20 +83,21 @@ const Home = () => {
         stream: myMediaStream,
       });
       peer.on("signal", (data) => {
-        console.log(SocketEvent.DoCall, data);
         socket.emit(SocketEvent.DoCall, {
           userId,
           from: mySocketId,
+          signal: data,
         });
       });
       peer.on("stream", (stream) => {
         console.log("stream", { stream });
         partnerVideoRef.current.srcObject = stream;
+        partnerVideoRef.current.play();
       });
+      peer.on("error", (err) => console.log("peer error1", err));
       socket.on(SocketEvent.AcceptedCall, (signal) => {
         // 相手が着信を受け入れた
-        console.log({ signal });
-        setRinging(false);
+        console.log(SocketEvent.AcceptedCall, signal);
         peer.signal(signal);
       });
       peerRef.current = peer;
@@ -105,23 +111,30 @@ const Home = () => {
   );
 
   const handleAccept = useCallback(() => {
-    if (!socket || !myMediaStream || !mySocketId) return;
+    if (!socket || !myMediaStream || !mySocketId || !receivedSignal) return;
     setRinging(false);
     const peer = new Peer({
-      initiator: true,
+      initiator: false,
       trickle: false,
       stream: myMediaStream,
     });
-    peer.on("signal", (data) => {
-      console.log(SocketEvent.AcceptCall, { data });
-      socket.emit(SocketEvent.AcceptCall, { signal: data, to: mySocketId });
+
+    // 発信側からの信号データを受け取る
+    peer.on("signal", (signal) => {
+      socket.emit(SocketEvent.AcceptCall, {
+        signal,
+        to: paterSocketId,
+      });
     });
     peer.on("stream", (stream) => {
       console.log("stream", stream);
       partnerVideoRef.current.srcObject = stream;
+      partnerVideoRef.current.play();
     });
+    peer.signal(receivedSignal);
+    peer.on("error", (err) => console.log("peer error2", err));
     peerRef.current = peer;
-  }, [socket, myMediaStream, mySocketId]);
+  }, [socket, myMediaStream, mySocketId, receivedSignal, paterSocketId]);
 
   const handleReject = useCallback(() => {
     socket?.emit(SocketEvent.RejectCall);
