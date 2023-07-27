@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getAccessToken } from "@/api";
 import Loading from "../../../feedbacks/Loading";
 import { useAuth } from "../../../providers/AuthProvider";
 import { urlStringify } from "@/utils";
@@ -16,16 +15,12 @@ const AuthGuard: React.FC<AuthGuardProps> = (props) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isInitial, setInitial] = useState(true);
-  const { accessToken, setAccessToken } = useAuth();
+  const { accessToken, refreshToken } = useAuth();
   useEffect(() => {
     if (isInitial) {
-      getAccessToken()
-        .then(({ accessToken }) => {
-          setAccessToken(accessToken);
-        })
-        .finally(() => {
-          setInitial(false);
-        });
+      refreshToken().finally(() => {
+        setInitial(false);
+      });
     } else if (!accessToken) {
       const currentUrl = urlStringify({ pathname });
       router.push(
@@ -35,7 +30,7 @@ const AuthGuard: React.FC<AuthGuardProps> = (props) => {
         }),
       );
     }
-  }, [isInitial, accessToken, router, setAccessToken, pathname]);
+  }, [isInitial, accessToken, router, refreshToken, pathname]);
 
   if (accessToken === null) {
     return loadingElement;

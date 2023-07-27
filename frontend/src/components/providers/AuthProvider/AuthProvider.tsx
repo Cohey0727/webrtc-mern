@@ -1,13 +1,15 @@
 "use client";
-import { logout } from "@/api";
+import { LoginParams, getAccessToken, login, logout } from "@/api";
 import { jwtDecode } from "@/utils";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 type AuthContextType = {
   accessToken: string | null;
   userId: string | null;
-  setAccessToken: (accessToken: string | null) => void;
+
   logout: () => Promise<void>;
+  login: (params: LoginParams) => Promise<void>;
+  refreshToken: () => Promise<void>;
 };
 
 type TokenPayload = {
@@ -19,8 +21,10 @@ type TokenPayload = {
 const AuthContext = createContext<AuthContextType>({
   accessToken: null,
   userId: null,
-  setAccessToken: () => {},
+
   logout: () => Promise.resolve(),
+  login: () => Promise.resolve(),
+  refreshToken: () => Promise.resolve(),
 });
 
 type AuthProviderProps = {
@@ -35,6 +39,16 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
     setAccessToken(null);
   }, []);
 
+  const handleLogin = useCallback(async (params: LoginParams) => {
+    const { accessToken } = await login(params);
+    setAccessToken(accessToken);
+  }, []);
+
+  const handleRefresh = useCallback(async () => {
+    const { accessToken } = await getAccessToken();
+    setAccessToken(accessToken);
+  }, []);
+
   const userId = useMemo(() => {
     // jwt decode
     if (!accessToken) return null;
@@ -42,7 +56,15 @@ const AuthProvider: React.FC<AuthProviderProps> = (props) => {
   }, [accessToken]);
 
   return (
-    <AuthContext.Provider value={{ accessToken, userId, setAccessToken, logout: handleLogout }}>
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        userId,
+        logout: handleLogout,
+        login: handleLogin,
+        refreshToken: handleRefresh,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

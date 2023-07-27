@@ -3,14 +3,13 @@ import { Column } from "@/components/containers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styles from "./styles";
 import { useForm } from "react-hook-form";
-import { FormProvider, TextInputField, useLoading } from "@/components";
+import { FormProvider, TextInputField, useAuth, useLoading } from "@/components";
 import { Button, Typography } from "@mui/material";
 import { LoginFormSchema, LoginFormValues } from "./schema";
 import { useCallback } from "react";
-import { LoginResponse, login } from "@/api";
 
 type LoginFormProps = {
-  onSubmitSuccess?: (response: LoginResponse) => void;
+  onSubmitSuccess?: () => void;
 };
 
 const LoginFormId = "login-form";
@@ -20,21 +19,20 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
   const formContext = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
   });
-  const { setError } = formContext;
+  const { login } = useAuth();
   const [loading, setLoading] = useLoading();
 
   const handleSubmit = useCallback(
     async (formValues: LoginFormValues) => {
       try {
         setLoading(true);
-        const { email, password } = formValues;
-        const res = await login({ email, password });
-        onSubmitSuccess?.(res);
+        await login(formValues);
+        onSubmitSuccess?.();
       } finally {
         setLoading(false);
       }
     },
-    [setLoading, onSubmitSuccess],
+    [setLoading, login, onSubmitSuccess],
   );
 
   return (

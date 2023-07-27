@@ -7,16 +7,11 @@ import { useCallback } from "react";
 function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setAccessToken } = useAuth();
 
-  const handleSubmitSuccess = useCallback(
-    (res: LoginResponse) => {
-      const callbackPath = searchParams.get("callback") ?? "/";
-      router.push(callbackPath);
-      setAccessToken(res.accessToken);
-    },
-    [router, searchParams, setAccessToken],
-  );
+  const handleSubmitSuccess = useCallback(() => {
+    const callbackPath = searchParams.get("callback") ?? "/";
+    router.push(callbackPath);
+  }, [router, searchParams]);
   return (
     <Page>
       <Center>
