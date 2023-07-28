@@ -139,12 +139,12 @@ const Home = () => {
     peer.signal(receivedData.signal);
     peer.on("error", (err) => console.log("peer error2", err));
     peerRef.current = peer;
-  }, [socket, myMediaStream, mySocketId, receivedData]);
+  }, [socket, myMediaStream, mySocketId, receivedData, setRinging]);
 
   const handleReject = useCallback(() => {
     socket?.emit(SocketEvent.RejectCall);
     setRinging(false);
-  }, [socket]);
+  }, [setRinging, socket]);
 
   return (
     <Row sx={styles.root}>
