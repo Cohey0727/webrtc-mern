@@ -1,15 +1,18 @@
-import Link from "next/link";
+"use client";
+import { Loading, withAuthGuard } from "@/components";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
+// このページはログインしていると、自動的に/homeにリダイレクトされる
+// ログインしていないと、/auth/loginにリダイレクトされる
 function Root() {
-  return (
-    <main>
-      <Link href="/auth/register">Register</Link>
-      <Link href="/auth/login">Login</Link>
-      <Link href="/settings">Settings</Link>
-      <Link href="/home">Home</Link>
-      <h1>{`What's App`}</h1>
-    </main>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/home");
+  }, [router]);
+
+  return <Loading />;
 }
 
-export default Root;
+export default withAuthGuard(Root);

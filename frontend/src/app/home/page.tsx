@@ -21,6 +21,7 @@ import {
 import Peer from "simple-peer";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles";
+import { playAudio, useAudio } from "@/utils";
 
 type ReceivedData = {
   signal: Peer.SignalData;
@@ -33,8 +34,8 @@ const Home = () => {
   const [mySocketId, setMySocketId] = useState<string | null>(null);
   const [myMediaStream, setMyMediaStream] = useState<MediaStream | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
-  const [ringing, setRinging] = useState(false);
   const [receivedData, setReceivedData] = useState<ReceivedData | null>(null);
+  const [ringing, setRinging] = useAudio("/audio/ringtone.mp3");
 
   const peerRef = useRef<Peer.Instance | null>(null);
   const ownVideoRef = useRef<HTMLVideoElement>({} as HTMLVideoElement);
@@ -56,7 +57,6 @@ const Home = () => {
     });
     socket.on(SocketEvent.ReceiveCall, (data) => {
       // 受信
-      console.log({ data });
       setRinging(true);
       setReceivedData({
         signal: data.signal,
@@ -71,8 +71,7 @@ const Home = () => {
     return () => {
       socket.emit(SocketEvent.Leave);
     };
-  }, [socket, setupMedia]);
-  //--------------------------
+  }, [socket, setupMedia, setRinging]);
 
   useEffect(() => {
     if (!myMediaStream) return;
