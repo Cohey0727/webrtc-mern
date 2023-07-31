@@ -21,7 +21,7 @@ import {
 import Peer from "simple-peer";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles";
-import { playAudio, useAudio } from "@/utils";
+import { getOwnSignal, useAudio } from "@/utils";
 
 type ReceivedData = {
   signal: Peer.SignalData;
@@ -79,21 +79,16 @@ const Home = () => {
   }, [myMediaStream]);
 
   const handleClickUser = useCallback(
-    (onlineUser: OnlineUser) => {
+    async (onlineUser: OnlineUser) => {
       if (!socket || !myMediaStream || !mySocketId) return;
+      const { peer, signal } = await getOwnSignal(myMediaStream);
       const userId = onlineUser.user._id;
-      const peer = new Peer({
-        initiator: true,
-        trickle: false,
-        stream: myMediaStream,
+      socket.emit(SocketEvent.DoCall, {
+        userId,
+        from: mySocketId,
+        signal,
       });
-      peer.on("signal", (data) => {
-        socket.emit(SocketEvent.DoCall, {
-          userId,
-          from: mySocketId,
-          signal: data,
-        });
-      });
+
       peer.on("stream", (stream) => {
         console.log("stream", { stream });
         partnerVideoRef.current.srcObject = stream;

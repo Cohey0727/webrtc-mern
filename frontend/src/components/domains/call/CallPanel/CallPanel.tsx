@@ -24,7 +24,6 @@ const CallPanel: React.FC<CallPanelProps> = (props) => {
         autoPlay
         className={focusMe ? "large-video-call" : "small-video-call"}
         onClick={() => {
-          console.log("Hello");
           setFocusMe(true);
         }}
       />
