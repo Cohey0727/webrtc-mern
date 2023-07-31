@@ -119,19 +119,23 @@ const Home = () => {
       stream: myMediaStream,
     });
 
-    // 発信側からの信号データを受け取る
+    // 発信側からのsignalデータを受け取る
+    peer.signal(receivedData.signal);
+
     peer.on("signal", (signal) => {
+      // 相手にsignalデータを送る
       socket.emit(SocketEvent.AcceptCall, {
         signal,
         to: receivedData.socketId,
       });
     });
     peer.on("stream", (stream) => {
+      // 相手のstreamを受け取り再生する
       console.log("stream", stream);
       partnerVideoRef.current.srcObject = stream;
       partnerVideoRef.current.play();
     });
-    peer.signal(receivedData.signal);
+
     peer.on("error", (err) => console.log("peer error2", err));
     peerRef.current = peer;
   }, [socket, myMediaStream, mySocketId, receivedData, setRinging]);
