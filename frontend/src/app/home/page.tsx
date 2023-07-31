@@ -21,7 +21,7 @@ import {
 import Peer from "simple-peer";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./styles";
-import { getOwnSignal, useAudio } from "@/utils";
+import { createPeerAndSignal, useAudio } from "@/utils";
 
 type ReceivedData = {
   signal: Peer.SignalData;
@@ -81,7 +81,7 @@ const Home = () => {
   const handleClickUser = useCallback(
     async (onlineUser: OnlineUser) => {
       if (!socket || !myMediaStream || !mySocketId) return;
-      const { peer, signal } = await getOwnSignal(myMediaStream);
+      const { peer, signal } = await createPeerAndSignal(myMediaStream);
       const userId = onlineUser.user._id;
       socket.emit(SocketEvent.DoCall, {
         userId,
